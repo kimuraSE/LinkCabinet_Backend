@@ -3,6 +3,7 @@ package usecase
 import (
 	"LinkCabinet_Backend/internal/api/model"
 	"LinkCabinet_Backend/internal/api/repository"
+	"LinkCabinet_Backend/internal/api/validator"
 	"os"
 	"time"
 
@@ -17,10 +18,11 @@ type IUserUsecase interface {
 
 type userUsecase struct {
 	ur repository.IUserRepository
+	uv validator.IUserValidator
 }
 
-func NewUserUsecase(ur repository.IUserRepository) IUserUsecase {
-	return &userUsecase{ur}
+func NewUserUsecase(ur repository.IUserRepository,uv validator.IUserValidator) IUserUsecase {
+	return &userUsecase{ur,uv}
 }
 
 func (uu *userUsecase) Login(user model.User) (string, error) {
@@ -50,6 +52,10 @@ func (uu *userUsecase) Login(user model.User) (string, error) {
 }
 
 func (uu *userUsecase) Register(user model.User) (string, error) {
+
+	if err:=uu.uv.UserValidate(user);err!=nil{
+		return "",err
+	}
 
 	hash,err := bycrypt.GenerateFromPassword([]byte(user.Password),10)
 	if err!=nil{
