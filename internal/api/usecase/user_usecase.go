@@ -31,7 +31,7 @@ func (uu *userUsecase) Login(user model.User) (string, error) {
 		return "", err
 	}
 
-	err := bycrypt.CompareHashAndPassword([]byte(user.Password), []byte(user.Password))
+	err := bycrypt.CompareHashAndPassword([]byte(storeUser.Password), []byte(user.Password))
 	if err != nil {
 		return "", err
 	}
