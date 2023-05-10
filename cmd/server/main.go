@@ -12,9 +12,14 @@ func main() {
 	db := db.NewDB()
 
 	userRepository := repository.NewUserRepository(db)
-	userUsecase := usecase.NewUserUsecase(userRepository)
-	userHandler := handler.NewUserHandler(userUsecase)
+	linkRepository := repository.NewLinksRepository(db)
 
-	server := server.NewServer(userHandler)
+	userUsecase := usecase.NewUserUsecase(userRepository)
+	linkUsecase := usecase.NewLinksUsecase(linkRepository)
+
+	userHandler := handler.NewUserHandler(userUsecase)
+	linkHandler := handler.NewLinksHandler(linkUsecase)
+
+	server := server.NewServer(userHandler,linkHandler)
 	server.Logger.Fatal(server.Start(":8080"))
 }
