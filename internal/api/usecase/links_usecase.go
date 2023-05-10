@@ -3,6 +3,7 @@ package usecase
 import (
 	"LinkCabinet_Backend/internal/api/model"
 	"LinkCabinet_Backend/internal/api/repository"
+	"LinkCabinet_Backend/internal/api/validator"
 )
 
 type ILinksUsecase interface {
@@ -15,10 +16,11 @@ type ILinksUsecase interface {
 
 type linksUsecase struct {
 	lr repository.ILinksRepository
+	lv validator.ILinksValidator
 }
 
-func NewLinksUsecase(lr repository.ILinksRepository) ILinksUsecase {
-	return &linksUsecase{lr}
+func NewLinksUsecase(lr repository.ILinksRepository,lv validator.ILinksValidator) ILinksUsecase {
+	return &linksUsecase{lr,lv}
 }
 
 func (lu *linksUsecase) AllGetLinks(userId uint) ([]model.LinkResponse, error) {
@@ -52,6 +54,12 @@ func (lu *linksUsecase) GetLinksByUserID(userId uint,linkId uint) (model.LinkRes
 }
 
 func (lu *linksUsecase) CreateLink(link model.Link) (model.LinkResponse, error) {
+	
+	if err := lu.lv.LinksValidator(link); err != nil {
+		return model.LinkResponse{}, err
+	}
+
+	
 	if err := lu.lr.CreateLink(&link); err != nil {
 		return model.LinkResponse{}, err
 	}
@@ -64,6 +72,12 @@ func (lu *linksUsecase) CreateLink(link model.Link) (model.LinkResponse, error) 
 }
 
 func (lu *linksUsecase) UpdateLink(link model.Link,userId uint,linkId uint) (model.LinkResponse, error) {
+	
+	if err:= lu.lv.LinksValidator(link); err != nil {
+		return model.LinkResponse{}, err
+	}
+	
+
 	if err := lu.lr.UpdateLink(&link,userId,linkId); err != nil {
 		return model.LinkResponse{}, err
 	}

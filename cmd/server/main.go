@@ -4,6 +4,7 @@ import (
 	"LinkCabinet_Backend/internal/api/handler"
 	"LinkCabinet_Backend/internal/api/repository"
 	"LinkCabinet_Backend/internal/api/usecase"
+	"LinkCabinet_Backend/internal/api/validator"
 	"LinkCabinet_Backend/internal/db"
 	"LinkCabinet_Backend/pkg/server"
 )
@@ -14,8 +15,11 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	linkRepository := repository.NewLinksRepository(db)
 
-	userUsecase := usecase.NewUserUsecase(userRepository)
-	linkUsecase := usecase.NewLinksUsecase(linkRepository)
+	userValidator := validator.NewUserValidator()
+	linkValidator := validator.NewLinksValidator()
+
+	userUsecase := usecase.NewUserUsecase(userRepository,userValidator)
+	linkUsecase := usecase.NewLinksUsecase(linkRepository,linkValidator)
 
 	userHandler := handler.NewUserHandler(userUsecase)
 	linkHandler := handler.NewLinksHandler(linkUsecase)
