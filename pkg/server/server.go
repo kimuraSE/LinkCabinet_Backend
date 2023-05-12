@@ -24,6 +24,7 @@ func NewServer(uh handler.IUserHandler,lh handler.ILinksHandler) *echo.Echo {
 			AllowCredentials:true,
 		}))
 		
+		//修正
 		e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{	
 			CookiePath: "/",
 			CookieDomain: os.Getenv("API_DOMAIN"),
@@ -37,6 +38,7 @@ func NewServer(uh handler.IUserHandler,lh handler.ILinksHandler) *echo.Echo {
 		e.POST("/signup", uh.SignUp)
 		e.POST("/logout", uh.Logout)
 		e.GET("/csrf", uh.CsrfToken)
+
 
 
 	linkApi := e.Group("/links")
