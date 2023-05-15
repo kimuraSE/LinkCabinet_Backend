@@ -38,6 +38,14 @@ func NewServer(uh handler.IUserHandler,lh handler.ILinksHandler) *echo.Echo {
 		e.POST("/signup", uh.SignUp)
 		e.POST("/logout", uh.Logout)
 		e.GET("/csrf", uh.CsrfToken)
+	
+	loginAfterApi := e.Group("/user")
+	loginAfterApi.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey : []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:jwt_token",
+	}))
+
+	loginAfterApi.DELETE("", uh.DeleteUser)
 
 
 

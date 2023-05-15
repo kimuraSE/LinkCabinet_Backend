@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,6 +16,7 @@ type IUserHandler interface {
 	Login(c echo.Context) error
 	SignUp(c echo.Context) error
 	Logout(c echo.Context) error
+	DeleteUser(c echo.Context) error
 	CsrfToken(c echo.Context) error
 }
 
@@ -78,7 +80,7 @@ func (uh *userHandler) SignUp(c echo.Context) error {
 
 func (uh *userHandler) Logout(c echo.Context) error {
 	cookie :=new(http.Cookie)
-	cookie.Name="token"
+	cookie.Name="jwt_token"
 	cookie.Value=""
 	cookie.Expires=time.Now()
 	cookie.HttpOnly=true
@@ -98,3 +100,25 @@ func (uh *userHandler) CsrfToken(c echo.Context) error {
 	})
 }
 
+func (uh *userHandler) DeleteUser(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64)
+
+	if err:=uh.uu.DeleteUser(uint(userId));err!=nil{
+		return c.JSON(http.StatusInternalServerError,err.Error())
+	}
+
+	cookie :=new(http.Cookie)
+	cookie.Name="jwt_token"
+	cookie.Value=""
+	cookie.Expires=time.Now()
+	cookie.HttpOnly=true
+	cookie.Domain=os.Getenv("API_DOMAIN")
+	cookie.SameSite=http.SameSiteNoneMode
+	// cookie.Secure=true
+	cookie.Path="/"
+	c.SetCookie(cookie)
+
+	return c.NoContent(http.StatusOK)
+}

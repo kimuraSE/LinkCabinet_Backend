@@ -14,6 +14,7 @@ import (
 type IUserUsecase interface {
 	Login(user model.User) (string, error)
 	Register(user model.User) (string, error)
+	DeleteUser(userId uint) error
 }
 
 type userUsecase struct {
@@ -83,6 +84,13 @@ func (uu *userUsecase) Register(user model.User) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func (uu *userUsecase) DeleteUser(userId uint) error {
+	if err:=uu.ur.DestroyUser(userId);err!=nil{
+		return err
+	}
+	return nil
 }
 
 
