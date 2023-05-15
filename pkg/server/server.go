@@ -39,27 +39,19 @@ func NewServer(uh handler.IUserHandler,lh handler.ILinksHandler) *echo.Echo {
 		e.POST("/logout", uh.Logout)
 		e.GET("/csrf", uh.CsrfToken)
 	
-	loginAfterApi := e.Group("/user")
-	loginAfterApi.Use(echojwt.WithConfig(echojwt.Config{
+	top := e.Group("/top")
+	top.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey : []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:jwt_token",
 	}))
 
-	loginAfterApi.DELETE("", uh.DeleteUser)
+	top.DELETE("", uh.DeleteUser)
 
-
-
-	linkApi := e.Group("/links")
-	linkApi.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey : []byte(os.Getenv("SECRET")),
-		TokenLookup: "cookie:jwt_token",
-	}))
-
-	linkApi.GET("", lh.AllGetLinks)
-	linkApi.GET("/:linkId", lh.GetLinkById)
-	linkApi.POST("", lh.CreateLink)
-	linkApi.PUT("/:linkId", lh.UpdateLink)
-	linkApi.DELETE("/:linkId", lh.DeleteLink)
+	top.GET("", lh.AllGetLinks)
+	top.GET("/:linkId", lh.GetLinkById)
+	top.POST("", lh.CreateLink)
+	top.PUT("/:linkId", lh.UpdateLink)
+	top.DELETE("/:linkId", lh.DeleteLink)
 	
 	return e
 
