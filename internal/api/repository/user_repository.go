@@ -13,7 +13,7 @@ type IUserRepository interface {
 	DestroyUser(userId uint) error
 	UpdateUserName(user *model.User,userId uint) error
 	UpdateUserEmail(user *model.User,userId uint) error
-	
+	UpdateUserPassword(user *model.User,userId uint) error
 }
 
 type userRepository struct {
@@ -58,6 +58,17 @@ func (ur *userRepository) UpdateUserName(user *model.User,userId uint) error {
 
 func (ur *userRepository) UpdateUserEmail(user *model.User,userId uint) error {
 	result:=ur.db.Model(user).Clauses(clause.Returning{}).Where("id=?",userId).Update("email",user.Email)
+	if result.Error != nil{
+		return result.Error
+	}
+	if result.RowsAffected < 1{
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}
+
+func (ur *userRepository) UpdateUserPassword(user *model.User,userId uint) error {
+	result:=ur.db.Model(user).Clauses(clause.Returning{}).Where("id=?",userId).Update("password",user.Password)
 	if result.Error != nil{
 		return result.Error
 	}

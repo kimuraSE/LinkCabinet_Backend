@@ -20,6 +20,7 @@ type IUserHandler interface {
 	CsrfToken(c echo.Context) error
 	UpdateUserName(c echo.Context) error
 	UpdateUserEmail(c echo.Context) error
+	UpdateUserPassword(c echo.Context) error
 }
 
 type userHandler struct {
@@ -163,3 +164,21 @@ func (uh *userHandler) UpdateUserEmail(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+func (uh *userHandler) UpdateUserPassword(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64)
+
+	userStore := model.User{}
+	if err := c.Bind(&userStore); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err:=uh.uu.UpdateUserPassword(userStore,uint(userId));err!=nil{
+		return c.JSON(http.StatusInternalServerError,err.Error())
+	}
+
+	// return c.JSON(http.StatusOK,userResponse)
+
+	return c.NoContent(http.StatusOK)
+}

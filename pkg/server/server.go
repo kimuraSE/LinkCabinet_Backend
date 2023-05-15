@@ -48,6 +48,7 @@ func NewServer(uh handler.IUserHandler,lh handler.ILinksHandler) *echo.Echo {
 	top.DELETE("", uh.DeleteUser)
 	top.PUT("/settings/name", uh.UpdateUserName)
 	top.PUT("/settings/email", uh.UpdateUserEmail)
+	top.PUT("/settings/password", uh.UpdateUserPassword)
 
 	top.GET("", lh.AllGetLinks)
 	top.GET("/:linkId", lh.GetLinkById)

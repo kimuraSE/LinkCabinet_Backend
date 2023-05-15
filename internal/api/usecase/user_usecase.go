@@ -17,6 +17,7 @@ type IUserUsecase interface {
 	DeleteUser(userId uint) error
 	UpdateUserName(user model.User, userId uint) error
 	UpdateUserEmail(user model.User, userId uint) error
+	UpdateUserPassword(user model.User, userId uint) error
 }
 
 type userUsecase struct {
@@ -109,5 +110,20 @@ func (uu *userUsecase) UpdateUserEmail(user model.User, userId uint) error {
 	return nil
 }
 
+func (uu *userUsecase) UpdateUserPassword(user model.User, userId uint) error {
+	
+	hash,err := bycrypt.GenerateFromPassword([]byte(user.Password),10)
+	if err!=nil{
+		return err
+	}
 
+	newUser := model.User{
+		Password: string(hash),
+	}
+
+	if err:=uu.ur.UpdateUserPassword(&newUser,userId);err!=nil{
+		return err
+	}
+	return nil
+}
 
