@@ -15,6 +15,8 @@ type IUserUsecase interface {
 	Login(user model.User) (string, error)
 	Register(user model.User) (string, error)
 	DeleteUser(userId uint) error
+	UpdateUserName(user model.User, userId uint) error
+	UpdateUserEmail(user model.User, userId uint) error
 }
 
 type userUsecase struct {
@@ -93,6 +95,19 @@ func (uu *userUsecase) DeleteUser(userId uint) error {
 	return nil
 }
 
+func (uu *userUsecase) UpdateUserName(user model.User, userId uint) error {
+	if err:=uu.ur.UpdateUserName(&user,userId);err!=nil{
+		return err
+	}
+	return nil
+}
+
+func (uu *userUsecase) UpdateUserEmail(user model.User, userId uint) error {
+	if err:=uu.ur.UpdateUserEmail(&user,userId);err!=nil{
+		return err
+	}
+	return nil
+}
 
 
 
