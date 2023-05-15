@@ -4,6 +4,7 @@ import (
 	"LinkCabinet_Backend/internal/api/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type ILinksRepository interface {
@@ -45,7 +46,12 @@ func (lr *linksRepository) CreateLink(link *model.Link) error {
 }
 
 func (lr *linksRepository) UpdateLink(link *model.Link,userId uint, linkId uint) error {
-	if err := lr.db.Table("users").Select("links.id , links.title , links.url").Joins("JOIN links ON users.id = links.user_id").Where("links.user_id = ? AND links.id=?",userId,linkId).Updates(link).Error; err != nil {
+	if err := lr.db.Model(link).Clauses(clause.Returning{}).Where("id=? AND user_id=?",linkId,userId).Updates(
+		map[string]interface{}{
+		"title": link.Title,
+		"url": link.Url,
+		},
+	).Error; err != nil {
 		return err
 	}
 	return nil
