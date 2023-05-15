@@ -18,6 +18,8 @@ type IUserHandler interface {
 	Logout(c echo.Context) error
 	DeleteUser(c echo.Context) error
 	CsrfToken(c echo.Context) error
+	UpdateUserName(c echo.Context) error
+	UpdateUserEmail(c echo.Context) error
 }
 
 type userHandler struct {
@@ -122,3 +124,42 @@ func (uh *userHandler) DeleteUser(c echo.Context) error {
 
 	return c.NoContent(http.StatusOK)
 }
+
+func (uh *userHandler) UpdateUserName(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64)
+
+	userStore := model.User{}
+	if err := c.Bind(&userStore); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err:=uh.uu.UpdateUserName(userStore,uint(userId));err!=nil{
+		return c.JSON(http.StatusInternalServerError,err.Error())
+	}
+
+	// return c.JSON(http.StatusOK,userResponse)
+
+	return c.NoContent(http.StatusOK)
+}
+
+func (uh *userHandler) UpdateUserEmail(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64)
+
+	userStore := model.User{}
+	if err := c.Bind(&userStore); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err:=uh.uu.UpdateUserEmail(userStore,uint(userId));err!=nil{
+		return c.JSON(http.StatusInternalServerError,err.Error())
+	}
+
+	// return c.JSON(http.StatusOK,userResponse)
+
+	return c.NoContent(http.StatusOK)
+}
+
