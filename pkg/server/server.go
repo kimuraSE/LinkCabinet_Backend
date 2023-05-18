@@ -29,8 +29,8 @@ func NewServer(uh handler.IUserHandler,lh handler.ILinksHandler) *echo.Echo {
 			CookiePath: "/",
 			CookieDomain: os.Getenv("API_DOMAIN"),
 			CookieHTTPOnly: true,
-			// CookieSameSite: http.SameSiteNoneMode,
-			CookieSameSite: http.SameSiteDefaultMode,
+			CookieSameSite: http.SameSiteNoneMode,
+			// CookieSameSite: http.SameSiteDefaultMode,
 			// CookieMaxAge: 60,
 		}))
 		

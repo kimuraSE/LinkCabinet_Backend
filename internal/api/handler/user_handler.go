@@ -50,7 +50,7 @@ func (uh *userHandler) Login(c echo.Context) error {
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	cookie.Path = "/"
 	cookie.SameSite = http.SameSiteNoneMode
-	// cookie.Secure = true
+	cookie.Secure = true
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
 }
@@ -76,7 +76,7 @@ func (uh *userHandler) SignUp(c echo.Context) error {
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	cookie.Path = "/"
 	cookie.SameSite = http.SameSiteNoneMode
-	// cookie.Secure = true
+	cookie.Secure = true
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
 }
@@ -89,7 +89,7 @@ func (uh *userHandler) Logout(c echo.Context) error {
 	cookie.HttpOnly=true
 	cookie.Domain=os.Getenv("API_DOMAIN")
 	cookie.SameSite=http.SameSiteNoneMode
-	// cookie.Secure=true
+	cookie.Secure=true
 	cookie.Path="/"
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
@@ -119,7 +119,7 @@ func (uh *userHandler) DeleteUser(c echo.Context) error {
 	cookie.HttpOnly=true
 	cookie.Domain=os.Getenv("API_DOMAIN")
 	cookie.SameSite=http.SameSiteNoneMode
-	// cookie.Secure=true
+	cookie.Secure=true
 	cookie.Path="/"
 	c.SetCookie(cookie)
 
@@ -140,8 +140,6 @@ func (uh *userHandler) UpdateUserName(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError,err.Error())
 	}
 
-	// return c.JSON(http.StatusOK,userResponse)
-
 	return c.NoContent(http.StatusOK)
 }
 
@@ -159,7 +157,6 @@ func (uh *userHandler) UpdateUserEmail(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError,err.Error())
 	}
 
-	// return c.JSON(http.StatusOK,userResponse)
 
 	return c.NoContent(http.StatusOK)
 }
@@ -178,7 +175,6 @@ func (uh *userHandler) UpdateUserPassword(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError,err.Error())
 	}
 
-	// return c.JSON(http.StatusOK,userResponse)
 
 	return c.NoContent(http.StatusOK)
 }
