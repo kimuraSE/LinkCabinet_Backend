@@ -2,11 +2,11 @@ package db
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 func NewDB() *gorm.DB {
@@ -32,10 +32,9 @@ func NewDB() *gorm.DB {
 
 }
 
-
 func CloseDB(db *gorm.DB) {
-	sqlDB,_:=db.DB()
-	if err:=sqlDB.Close();err!=nil{
+	sqlDB, _ := db.DB()
+	if err := sqlDB.Close(); err != nil {
 		log.Fatalln(err)
 	}
 }

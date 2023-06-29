@@ -18,9 +18,9 @@ func NewLinksValidator() ILinksValidator {
 
 func (lv *linksValidator) LinksValidator(links model.Link) error {
 	return validation.ValidateStruct(&links,
-		validation.Field(&links.Title,validation.Required.Error("title is required"),
-		validation.RuneLength(1,256).Error("limitted 1-256 characters")),
-		validation.Field(&links.Url,validation.Required.Error("url is required"),
-		validation.RuneLength(1,2048).Error("limitted 1-2048 characters")),
+		validation.Field(&links.Title, validation.Required.Error("title is required"),
+			validation.RuneLength(1, 256).Error("limitted 1-256 characters")),
+		validation.Field(&links.Url, validation.Required.Error("url is required"),
+			validation.RuneLength(1, 2048).Error("limitted 1-2048 characters")),
 	)
 }
