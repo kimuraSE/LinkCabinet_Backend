@@ -10,7 +10,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-
 type ILinksHandler interface {
 	AllGetLinks(c echo.Context) error
 	GetLinkById(c echo.Context) error
@@ -47,7 +46,7 @@ func (lh *linksHandler) GetLinkById(c echo.Context) error {
 
 	id := c.Param("linkId")
 
-	linkId,_ := strconv.Atoi(id)
+	linkId, _ := strconv.Atoi(id)
 
 	linkRes, err := lh.lu.GetLinksByUserID(uint(userId.(float64)), uint(linkId))
 	if err != nil {
@@ -88,7 +87,7 @@ func (lh *linksHandler) UpdateLink(c echo.Context) error {
 
 	id := c.Param("linkId")
 
-	linkId,_ := strconv.Atoi(id)
+	linkId, _ := strconv.Atoi(id)
 
 	linkRes, err := lh.lu.UpdateLink(link, uint(userId.(float64)), uint(linkId))
 	if err != nil {
@@ -105,7 +104,7 @@ func (lh *linksHandler) DeleteLink(c echo.Context) error {
 
 	id := c.Param("linkId")
 
-	linkId,_ := strconv.Atoi(id)
+	linkId, _ := strconv.Atoi(id)
 
 	err := lh.lu.DeleteLink(uint(userId.(float64)), uint(linkId))
 	if err != nil {
@@ -114,5 +113,3 @@ func (lh *linksHandler) DeleteLink(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, "Link deleted")
 }
-
-

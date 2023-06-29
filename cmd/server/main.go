@@ -18,12 +18,12 @@ func main() {
 	userValidator := validator.NewUserValidator()
 	linkValidator := validator.NewLinksValidator()
 
-	userUsecase := usecase.NewUserUsecase(userRepository,userValidator)
-	linkUsecase := usecase.NewLinksUsecase(linkRepository,linkValidator)
+	userUsecase := usecase.NewUserUsecase(userRepository, userValidator)
+	linkUsecase := usecase.NewLinksUsecase(linkRepository, linkValidator)
 
 	userHandler := handler.NewUserHandler(userUsecase)
 	linkHandler := handler.NewLinksHandler(linkUsecase)
 
-	server := server.NewServer(userHandler,linkHandler)
+	server := server.NewServer(userHandler, linkHandler)
 	server.Logger.Fatal(server.Start(":8080"))
 }

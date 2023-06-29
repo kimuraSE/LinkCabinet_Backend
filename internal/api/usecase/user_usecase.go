@@ -25,8 +25,8 @@ type userUsecase struct {
 	uv validator.IUserValidator
 }
 
-func NewUserUsecase(ur repository.IUserRepository,uv validator.IUserValidator) IUserUsecase {
-	return &userUsecase{ur,uv}
+func NewUserUsecase(ur repository.IUserRepository, uv validator.IUserValidator) IUserUsecase {
+	return &userUsecase{ur, uv}
 }
 
 func (uu *userUsecase) Login(user model.User) (string, error) {
@@ -44,7 +44,7 @@ func (uu *userUsecase) Login(user model.User) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": storeUser.ID,
-		"exp":    time.Now().Add(time.Hour * 72).Unix(),
+		"exp":     time.Now().Add(time.Hour * 72).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
@@ -57,28 +57,28 @@ func (uu *userUsecase) Login(user model.User) (string, error) {
 
 func (uu *userUsecase) Register(user model.User) (string, error) {
 
-	if err:=uu.uv.UserValidate(user);err!=nil{
-		return "",err
+	if err := uu.uv.UserValidate(user); err != nil {
+		return "", err
 	}
 
-	hash,err := bycrypt.GenerateFromPassword([]byte(user.Password),10)
-	if err!=nil{
-		return "",err
+	hash, err := bycrypt.GenerateFromPassword([]byte(user.Password), 10)
+	if err != nil {
+		return "", err
 	}
 
 	newUser := model.User{
-		Name: user.Name,
-		Email: user.Email,
+		Name:     user.Name,
+		Email:    user.Email,
 		Password: string(hash),
 	}
 
-	if err:=uu.ur.CreateUser(&newUser);err!=nil{
-		return "",err
+	if err := uu.ur.CreateUser(&newUser); err != nil {
+		return "", err
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": newUser.ID,
-		"exp":    time.Now().Add(time.Hour * 72).Unix(),
+		"exp":     time.Now().Add(time.Hour * 72).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
@@ -90,30 +90,30 @@ func (uu *userUsecase) Register(user model.User) (string, error) {
 }
 
 func (uu *userUsecase) DeleteUser(userId uint) error {
-	if err:=uu.ur.DestroyUser(userId);err!=nil{
+	if err := uu.ur.DestroyUser(userId); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (uu *userUsecase) UpdateUserName(user model.User, userId uint) error {
-	if err:=uu.ur.UpdateUserName(&user,userId);err!=nil{
+	if err := uu.ur.UpdateUserName(&user, userId); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (uu *userUsecase) UpdateUserEmail(user model.User, userId uint) error {
-	if err:=uu.ur.UpdateUserEmail(&user,userId);err!=nil{
+	if err := uu.ur.UpdateUserEmail(&user, userId); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (uu *userUsecase) UpdateUserPassword(user model.User, userId uint) error {
-	
-	hash,err := bycrypt.GenerateFromPassword([]byte(user.Password),10)
-	if err!=nil{
+
+	hash, err := bycrypt.GenerateFromPassword([]byte(user.Password), 10)
+	if err != nil {
 		return err
 	}
 
@@ -121,9 +121,8 @@ func (uu *userUsecase) UpdateUserPassword(user model.User, userId uint) error {
 		Password: string(hash),
 	}
 
-	if err:=uu.ur.UpdateUserPassword(&newUser,userId);err!=nil{
+	if err := uu.ur.UpdateUserPassword(&newUser, userId); err != nil {
 		return err
 	}
 	return nil
 }
-
